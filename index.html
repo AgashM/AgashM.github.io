@@ -348,8 +348,13 @@
       display: flex;
     }
 
-    .window.focused {
-      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 40px rgba(100, 255, 218, 0.05);
+    .window.maximized {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 1000;
     }
 
     .win-titlebar {
@@ -951,6 +956,20 @@
         font-size: 0.55rem;
         padding: 0.25rem 0.5rem;
       }
+
+      .desktop-icons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        justify-items: center;
+        max-width: 300px;
+        margin: 0 auto;
+      }
+
+      .d-icon {
+        width: auto;
+        margin: 0;
+      }
     }
   </style>
 </head>
@@ -968,7 +987,7 @@
 
   <div id="desktop-greeting">
     <h1>Agash.os</h1>
-    <p>Building Resilient Systems at Scale</p>
+    <p>Senior Software Developer</p>
     <div class="hint">&#8601; click the icons to explore</div>
   </div>
 
@@ -1195,7 +1214,7 @@
       <div class="contact-inner">
         <div class="contact-availability">
           <div class="avail-dot"></div>
-          <div>Open to Sr. Backend Engineering roles &amp; high-impact projects</div>
+          <div>Available for innovative projects</div>
         </div>
         <a class="contact-row" href="mailto:agashmahendran@gmail.com">
           <div class="contact-row-icon">&#9993;</div>
@@ -1335,6 +1354,34 @@
       }, 220);
     }
 
+    function minimizeWindow(name) {
+      const win = document.getElementById('win-' + name);
+      if (!win) return;
+      win.classList.remove('open', 'focused');
+      openWins.delete(name);
+      document.getElementById('tb-' + name)?.classList.remove('active');
+      if (openWins.size === 0) document.getElementById('desktop-greeting').style.opacity = '1';
+    }
+
+    function maximizeWindow(name) {
+      const win = document.getElementById('win-' + name);
+      if (!win) return;
+      if (win.classList.contains('maximized')) {
+        win.classList.remove('maximized');
+        win.style.width = '';
+        win.style.height = '';
+        win.style.left = '';
+        win.style.top = '';
+      } else {
+        win.classList.add('maximized');
+        win.style.width = '100vw';
+        win.style.height = '100vh';
+        win.style.left = '0';
+        win.style.top = '0';
+        win.style.zIndex = ++zTop;
+      }
+    }
+
     function focusWin(name) {
       document.querySelectorAll('.window').forEach(w => w.classList.remove('focused'));
       const win = document.getElementById('win-' + name);
@@ -1343,6 +1390,15 @@
 
     document.querySelectorAll('.window').forEach(win => {
       win.addEventListener('mousedown', () => focusWin(win.id.replace('win-', '')));
+      // Add event listeners for min/max buttons
+      const dots = win.querySelectorAll('.wdot');
+      dots.forEach(dot => {
+        if (dot.classList.contains('min')) {
+          dot.addEventListener('click', () => minimizeWindow(win.id.replace('win-', '')));
+        } else if (dot.classList.contains('max')) {
+          dot.addEventListener('click', () => maximizeWindow(win.id.replace('win-', '')));
+        }
+      });
     });
 
     // DRAG
@@ -1406,8 +1462,7 @@
       const map = { '1': 'about', '2': 'skills', '3': 'work', '4': 'contact', '5': 'resume' };
       if (map[e.key]) openWindow(map[e.key]);
       if (e.key === 'Escape') {
-        const f = document.querySelector('.window.focused');
-        if (f) closeWindow(f.id.replace('win-', ''));
+        openWins.forEach(name => closeWindow(name));
       }
     });
 
