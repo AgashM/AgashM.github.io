@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agash.os — Portfolio</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Clash+Display:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --os-bg: #0d0d14;
+      --glass: rgba(18, 18, 30, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --accent: #64ffda;
+      --accent2: #ff6b6b;
+      --accent3: #ffd93d;
+      --accent4: #a78bfa;
+      --text: #ccd6f6;
+      --muted: #8892b0;
+      --win-bg: rgba(13, 13, 22, 0.96);
+      --win-bar: rgba(30, 30, 50, 0.98);
+      --taskbar: rgba(10, 10, 18, 0.95);
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Space Mono', monospace;
+    }
+
+    body {
+      background: var(--os-bg);
+      color: var(--text);
+      position: relative;
+    }
+
+    /* WALLPAPER */
+    #wallpaper {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(100, 255, 218, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(167, 139, 250, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 80%, rgba(255, 107, 107, 0.05) 0%, transparent 50%), #0d0d14;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      from {
+        opacity: 0.1
+      }
+
+      to {
+        opacity: 0.7
+      }
+    }
+
+    .grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(100, 255, 218, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100, 255, 218, 0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      transition: transform 0.1s ease;
+    }
+
+    /* DESKTOP */
+    #desktop {
+      position: fixed;
+      inset: 0;
+      bottom: 60px;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem;
+      gap: 1.5rem;
+    }
+
+    .desktop-icons {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .d-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      width: 72px;
+      user-select: none;
+      transition: transform 0.2s;
+    }
+
+    .d-icon:hover {
+      transform: scale(1.12);
+    }
+
+    .d-icon:active {
+      transform: scale(0.95);
+    }
+
+    .d-icon-box {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+      transition: box-shadow 0.2s;
+    }
+
+    .d-icon:hover .d-icon-box {
+      box-shadow: 0 0 20px currentColor;
+    }
+
+    .d-icon-label {
+      font-size: 0.6rem;
+      color: var(--text);
+      text-align: center;
+      text-shadow: 0 1px 4px #000;
+      letter-spacing: 0.05em;
+    }
+
+    .icon-about .d-icon-box {
+      background: rgba(100, 255, 218, 0.1);
+      color: var(--accent);
+    }
+
+    .icon-skills .d-icon-box {
+      background: rgba(167, 139, 250, 0.1);
+      color: var(--accent4);
+    }
+
+    .icon-work .d-icon-box {
+      background: rgba(255, 107, 107, 0.1);
+      color: var(--accent2);
+    }
+
+    .icon-contact .d-icon-box {
+      background: rgba(255, 217, 61, 0.1);
+      color: var(--accent3);
+    }
+
+    .icon-resume .d-icon-box {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    /* CLOCK */
+    #clock-widget {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      z-index: 5;
+      text-align: right;
+    }
+
+    #clock-time {
+      font-family: 'Space Mono', monospace;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-shadow: 0 0 30px rgba(100, 255, 218, 0.3);
+      letter-spacing: -0.02em;
+    }
+
+    #clock-date {
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* HERO GREETING */
+    #desktop-greeting {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+      z-index: 1;
+      transition: opacity 0.5s;
+    }
+
+    #desktop-greeting h1 {
+      font-family: 'Clash Display', sans-serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent4) 50%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeIn 1s ease both;
+    }
+
+    #desktop-greeting p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: fadeIn 1s 0.3s ease both;
+    }
+
+    #desktop-greeting .hint {
+      margin-top: 2rem;
+      font-size: 0.65rem;
+      color: rgba(100, 255, 218, 0.4);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: pulse2 2s 1s ease infinite;
+    }
+
+    @keyframes pulse2 {
+
+      0%,
+      100% {
+        opacity: 0.4
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    /* TASKBAR */
+    #taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      z-index: 100;
+      background: var(--taskbar);
+      border-top: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+    }
+
+    .taskbar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .taskbar-logo {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    .taskbar-apps {
+      display: flex;
+      gap: 0.4rem;
+      margin-left: 1rem;
+    }
+
+    .tbar-btn {
+      padding: 0.3rem 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 4px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tbar-btn:hover,
+    .tbar-btn.active {
+      background: rgba(100, 255, 218, 0.1);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .taskbar-right {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* WINDOWS */
+    .window {
+      position: fixed;
+      z-index: 200;
+      background: var(--win-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(30px);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 320px;
+      min-height: 200px;
+      transition: box-shadow 0.2s;
+    }
+
+    .window.open {
+      display: flex;
+    }
+
+    .window.focused {
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 40px rgba(100, 255, 218, 0.05);
+    }
+
+    .win-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--win-bar);
+      border-bottom: 1px solid var(--glass-border);
+      cursor: move;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .win-dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .wdot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: filter 0.2s;
+    }
+
+    .wdot:hover {
+      filter: brightness(1.3);
+    }
+
+    .wdot.close {
+      background: #ff5f57;
+    }
+
+    .wdot.min {
+      background: #febc2e;
+    }
+
+    .wdot.max {
+      background: #28c840;
+    }
+
+    .win-title {
+      font-size: 0.7rem;
+      color: var(--muted);
+      flex: 1;
+      text-align: center;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .win-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    .win-body::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .win-body::-webkit-scrollbar-thumb {
+      background: var(--glass-border);
+    }
+
+    /* ABOUT */
+    #win-about {
+      width: 600px;
+      height: 460px;
+      top: 10%;
+      left: 12%;
+    }
+
+    .about-inner {
+      padding: 2rem;
+    }
+
+    .about-hi {
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .about-name {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .about-name span {
+      color: var(--accent);
+    }
+
+    .about-bio {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-bio strong {
+      color: var(--text);
+    }
+
+    .about-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .chip {
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+      border: 1px solid;
+    }
+
+    .chip-green {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(100, 255, 218, 0.06);
+    }
+
+    .chip-red {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      background: rgba(255, 107, 107, 0.06);
+    }
+
+    .chip-yellow {
+      border-color: var(--accent3);
+      color: var(--accent3);
+      background: rgba(255, 217, 61, 0.06);
+    }
+
+    .chip-purple {
+      border-color: var(--accent4);
+      color: var(--accent4);
+      background: rgba(167, 139, 250, 0.06);
+    }
+
+    .about-quote {
+      font-size: 0.75rem;
+      font-style: italic;
+      color: var(--muted);
+      border-left: 3px solid var(--accent);
+      padding-left: 1rem;
+      line-height: 1.8;
+    }
+
+    /* SKILLS */
+    #win-skills {
+      width: 680px;
+      height: 500px;
+      top: 8%;
+      left: 30%;
+    }
+
+    .skills-inner {
+      padding: 1.5rem;
+    }
+
+    .skills-section-label {
+      font-size: 0.6rem;
+      color: var(--accent4);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .skills-section-label:first-child {
+      margin-top: 0;
+    }
+
+    .skill-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .skill-bar-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .skill-bar-name {
+      font-size: 0.7rem;
+      color: var(--text);
+      width: 140px;
+      flex-shrink: 0;
+    }
+
+    .skill-bar-track {
+      flex: 1;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 1s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .skill-bar-pct {
+      font-size: 0.6rem;
+      color: var(--muted);
+      width: 35px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .cloud-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .ctag {
+      padding: 0.25rem 0.65rem;
+      background: rgba(167, 139, 250, 0.08);
+      border: 1px solid rgba(167, 139, 250, 0.2);
+      border-radius: 4px;
+      font-size: 0.62rem;
+      color: var(--accent4);
+      transition: all 0.2s;
+      cursor: default;
+    }
+
+    .ctag:hover {
+      background: rgba(167, 139, 250, 0.18);
+      transform: translateY(-2px);
+    }
+
+    /* WORK */
+    #win-work {
+      width: 700px;
+      height: 520px;
+      top: 5%;
+      right: 5%;
+    }
+
+    .work-inner {
+      padding: 0;
+    }
+
+    .work-item {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--glass-border);
+      transition: background 0.2s;
+    }
+
+    .work-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .work-item:last-child {
+      border-bottom: none;
+    }
+
+    .work-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .work-company {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .work-period {
+      font-size: 0.62rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    .work-role {
+      font-size: 0.7rem;
+      color: var(--accent2);
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .work-highlights {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .work-highlight {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 6px;
+      font-size: 0.65rem;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .work-highlight:hover {
+      border-color: var(--accent2);
+      color: var(--text);
+    }
+
+    .hl-num {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* CONTACT */
+    #win-contact {
+      width: 480px;
+      height: 420px;
+      bottom: 12%;
+      right: 8%;
+    }
+
+    .contact-inner {
+      padding: 1.75rem;
+    }
+
+    .contact-availability {
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      background: rgba(100, 255, 218, 0.05);
+      border: 1px solid rgba(100, 255, 218, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.68rem;
+      color: var(--accent);
+    }
+
+    .avail-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse3 1.5s infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse3 {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.4)
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(100, 255, 218, 0)
+      }
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.75rem;
+      transition: all 0.25s;
+    }
+
+    .contact-row:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .contact-row-icon {
+      font-size: 1.2rem;
+      width: 30px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .contact-row-type {
+      font-size: 0.55rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* RESUME */
+    #win-resume {
+      width: 520px;
+      height: 400px;
+      bottom: 10%;
+      left: 8%;
+    }
+
+    .resume-inner {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .resume-icon-big {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .resume-title {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .resume-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 320px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .resume-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .rbtn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 6px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid;
+    }
+
+    .rbtn-primary {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    .rbtn-primary:hover {
+      background: #4de8c4;
+      transform: translateY(-2px);
+    }
+
+    .rbtn-outline {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--glass-border);
+    }
+
+    .rbtn-outline:hover {
+      border-color: var(--accent4);
+      color: var(--accent4);
+      transform: translateY(-2px);
+    }
+
+    .resume-note {
+      margin-top: 1.5rem;
+      font-size: 0.58rem;
+      color: rgba(255, 255, 255, 0.2);
+      letter-spacing: 0.05em;
+      font-style: italic;
+    }
+
+    /* TOAST */
+    #toast {
+      position: fixed;
+      top: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      z-index: 9999;
+      background: rgba(18, 18, 30, 0.97);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* RIPPLE */
+    .ripple {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9990;
+      border-radius: 50%;
+      border: 1px solid rgba(100, 255, 218, 0.3);
+      animation: rippleOut 0.6s ease-out forwards;
+    }
+
+    @keyframes rippleOut {
+      from {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        transform: translate(-50%, -50%)
+      }
+
+      to {
+        width: 120px;
+        height: 120px;
+        opacity: 0;
+        transform: translate(-50%, -50%)
+      }
+    }
+
+    /* KEYBOARD HINT */
+    #keyhint {
+      position: fixed;
+      bottom: 70px;
+      right: 1.5rem;
+      z-index: 10;
+      font-size: 0.58rem;
+      color: rgba(255, 255, 255, 0.18);
+      text-align: right;
+      letter-spacing: 0.05em;
+      line-height: 1.8;
+      pointer-events: none;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:768px) {
+      .window {
+        width: 92vw !important;
+        height: 70vh !important;
+        left: 4vw !important;
+        right: 4vw !important;
+        top: 8% !important;
+        bottom: auto !important;
+      }
+
+      #desktop-greeting h1 {
+        font-size: 2.2rem;
+      }
+
+      .work-highlights {
+        grid-template-columns: 1fr;
+      }
+
+      #clock-widget {
+        display: none;
+      }
+
+      #keyhint {
+        display: none;
+      }
+
+      .taskbar-apps .tbar-btn {
+        font-size: 0.55rem;
+        padding: 0.25rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="wallpaper">
+    <div class="grid-lines"></div>
+  </div>
+
+  <div id="clock-widget">
+    <div id="clock-time">00:00</div>
+    <div id="clock-date">Saturday</div>
+  </div>
+
+  <div id="desktop-greeting">
+    <h1>Agash.os</h1>
+    <p>Building Resilient Systems at Scale</p>
+    <div class="hint">&#8601; click the icons to explore</div>
+  </div>
+
+  <div id="desktop">
+    <div class="desktop-icons">
+      <div class="d-icon icon-about" onclick="openWindow('about')">
+        <div class="d-icon-box">&#128100;</div>
+        <div class="d-icon-label">About</div>
+      </div>
+      <div class="d-icon icon-skills" onclick="openWindow('skills')">
+        <div class="d-icon-box">&#9889;</div>
+        <div class="d-icon-label">Skills</div>
+      </div>
+      <div class="d-icon icon-work" onclick="openWindow('work')">
+        <div class="d-icon-box">&#128188;</div>
+        <div class="d-icon-label">Work</div>
+      </div>
+      <div class="d-icon icon-contact" onclick="openWindow('contact')">
+        <div class="d-icon-box">&#9993;&#65039;</div>
+        <div class="d-icon-label">Contact</div>
+      </div>
+      <div class="d-icon icon-resume" onclick="openWindow('resume')">
+        <div class="d-icon-box">&#128196;</div>
+        <div class="d-icon-label">Resume</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT WINDOW -->
+  <div class="window" id="win-about">
+    <div class="win-titlebar">
+      <div class="win-dots">
+        <div class="wdot close" onclick="closeWindow('about')"></div>
+        <div class="wdot min"></div>
+        <div class="wdot max"></div>
+      </div>
+      <div class="win-title">about.md</div>
+      <div style="width:52px"></div>
+    </div>
+    <div class="win-body">
+      <div class="about-inner">
+        <div class="about-hi">// Hello, world</div>
+        <div class="about-name">I'm <span>Agash</span>.<br />Scaling systems, solving problems.</div>
+        <div class="about-bio">
+          Senior Software Developer passionate about <strong>distributed systems architecture</strong>,
+          <strong>high-performance backend engineering</strong>, and <strong>production-grade reliability</strong>. Over
+          3.5 years building and optimizing enterprise platforms that handle massive scale, from managing 10K+ connected
+          IoT devices to architecting cloud-native microservices on AWS.<br /><br />
+          I obsess over clean architecture, write code that scales, and design systems that are <strong>fault-tolerant
+            by default</strong>. I deliver solutions that not only work today but remain maintainable and resilient for
+          years to come.
+        </div>
+        <div class="about-quote">
+          "Great systems are built by attention to detail. 99.9% uptime isn't luck — it's engineering excellence."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILLS WINDOW -->
+  <div class="window" id="win-skills">
+    <div class="win-titlebar">
+      <div class="win-dots">
+        <div class="wdot close" onclick="closeWindow('skills')"></div>
+        <div class="wdot min"></div>
+        <div class="wdot max"></div>
+      </div>
+      <div class="win-title">skills.config</div>
+      <div style="width:52px"></div>
+    </div>
+    <div class="win-body">
+      <div class="skills-inner">
+        <div class="skills-section-label">// Core Languages &amp; Frameworks</div>
+        <div class="skill-bars">
+          <div class="skill-bar-item">
+            <span class="skill-bar-name">☕ Java</span>
+            <div class="skill-bar-track">
+              <div class="skill-bar-fill" style="background:var(--accent)" data-w="95"></div>
+            </div>
+            <span class="skill-bar-pct">95%</span>
+          </div>
+          <div class="skill-bar-item">
+            <span class="skill-bar-name">🍃 Spring Boot</span>
+            <div class="skill-bar-track">
+              <div class="skill-bar-fill" style="background:var(--accent)" data-w="92"></div>
+            </div>
+            <span class="skill-bar-pct">92%</span>
+          </div>
+          <div class="skill-bar-item">
+            <span class="skill-bar-name">🏗️ Microservices</span>
+            <div class="skill-bar-track">
+              <div class="skill-bar-fill" style="background:var(--accent4)" data-w="88"></div>
+            </div>
+            <span class="skill-bar-pct">88%</span>
+          </div>
+          <div class="skill-bar-item">
+            <span class="skill-bar-name">🗄️ SQL / Databases</span>
+            <div class="skill-bar-track">
+              <div class="skill-bar-fill" style="background:var(--accent4)" data-w="85"></div>
+            </div>
+            <span class="skill-bar-pct">85%</span>
+          </div>
+          <div class="skill-bar-item">
+            <span class="skill-bar-name">📨 Kafka / Messaging</span>
+            <div class="skill-bar-track">
+              <div class="skill-bar-fill" style="background:var(--accent2)" data-w="80"></div>
+            </div>
+            <span class="skill-bar-pct">80%</span>
+          </div>
+          <div class="skill-bar-item">
+            <span class="skill-bar-name">☁️ AWS Cloud</span>
+            <div class="skill-bar-track">
+              <div class="skill-bar-fill" style="background:var(--accent3)" data-w="82"></div>
+            </div>
+            <span class="skill-bar-pct">82%</span>
+          </div>
+        </div>
+        <div class="skills-section-label">// Cloud, DevOps &amp; Tooling</div>
+        <div class="cloud-tags">
+          <span class="ctag">🐳 Docker</span><span class="ctag">⚙️ Kubernetes (EKS)</span>
+          <span class="ctag">🔧 Terraform</span><span class="ctag">🔨 Jenkins CI/CD</span>
+          <span class="ctag">🔍 SonarQube</span><span class="ctag">🛡️ Trivy</span>
+          <span class="ctag">✓ JUnit</span><span class="ctag">🌳 Git</span>
+          <span class="ctag">⚡ Redis</span><span class="ctag">📊 Cassandra</span>
+          <span class="ctag">🍃 MongoDB</span><span class="ctag">🗂️ DynamoDB</span>
+          <span class="ctag">📦 Protocol Buffers</span><span class="ctag">🐍 Python</span>
+          <span class="ctag">📡 MQTT</span><span class="ctag">🐘 PostgreSQL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORK WINDOW -->
+  <div class="window" id="win-work">
+    <div class="win-titlebar">
+      <div class="win-dots">
+        <div class="wdot close" onclick="closeWindow('work')"></div>
+        <div class="wdot min"></div>
+        <div class="wdot max"></div>
+      </div>
+      <div class="win-title">experience.log</div>
+      <div style="width:52px"></div>
+    </div>
+    <div class="win-body">
+      <div class="work-item">
+        <div class="work-header">
+          <div>
+            <div class="work-company">Tata Elxsi</div>
+            <div class="work-role">&#8627; Senior Software Engineer</div>
+          </div>
+          <div class="work-period">Mar 2025 – Present</div>
+        </div>
+        <div class="work-highlights">
+          <div class="work-highlight">
+            <div class="hl-num">35%</div>
+            <div>platform scalability gain through optimization</div>
+          </div>
+          <div class="work-highlight">
+            <div class="hl-num">15+</div>
+            <div>mission-critical REST APIs engineered</div>
+          </div>
+          <div class="work-highlight">
+            <div class="hl-num">99.9%</div>
+            <div>production uptime SLA consistently met</div>
+          </div>
+          <div class="work-highlight">
+            <div class="hl-num">6ms</div>
+            <div>avg latency on high-throughput endpoints</div>
+          </div>
+        </div>
+      </div>
+      <div class="work-item">
+        <div class="work-header">
+          <div>
+            <div class="work-company">Tata Elxsi</div>
+            <div class="work-role">&#8627; Software Engineer · Automotive Telematics</div>
+          </div>
+          <div class="work-period">Feb 2023 – Feb 2025</div>
+        </div>
+        <div class="work-highlights">
+          <div class="work-highlight">
+            <div class="hl-num">10K+</div>
+            <div>IoT devices reliably managed in production</div>
+          </div>
+          <div class="work-highlight">
+            <div class="hl-num">50%</div>
+            <div>deployment cycle time reduced via CI/CD</div>
+          </div>
+          <div class="work-highlight">
+            <div class="hl-num">8+</div>
+            <div>high-impact features shipped to end users</div>
+          </div>
+          <div class="work-highlight">
+            <div class="hl-num">20ms</div>
+            <div>edge latency on device communication APIs</div>
+          </div>
+        </div>
+      </div>
+      <div class="work-item">
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <div style="font-size:0.65rem;color:var(--muted);">&#127979; B.E. Computer Science · Anna University, Trichy ·
+            2018–2022</div>
+          <div style="margin-left:auto;display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <span class="chip chip-yellow" style="font-size:0.58rem;">&#11088; Stellar Contribution Award</span>
+            <span class="chip chip-green" style="font-size:0.58rem;">&#127942; Extra Mile x2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT WINDOW -->
+  <div class="window" id="win-contact">
+    <div class="win-titlebar">
+      <div class="win-dots">
+        <div class="wdot close" onclick="closeWindow('contact')"></div>
+        <div class="wdot min"></div>
+        <div class="wdot max"></div>
+      </div>
+      <div class="win-title">contact.sh</div>
+      <div style="width:52px"></div>
+    </div>
+    <div class="win-body">
+      <div class="contact-inner">
+        <div class="contact-availability">
+          <div class="avail-dot"></div>
+          <div>Open to Sr. Backend Engineering roles &amp; high-impact projects</div>
+        </div>
+        <a class="contact-row" href="mailto:agashmahendran@gmail.com">
+          <div class="contact-row-icon">&#9993;</div>
+          <div>
+            <div class="contact-row-type">Email</div>
+            <div>agashmahendran@gmail.com</div>
+          </div>
+        </a>
+        <a class="contact-row" href="tel:+919442584761">
+          <div class="contact-row-icon">&#128222;</div>
+          <div>
+            <div class="contact-row-type">Phone</div>
+            <div>+91 9442584761</div>
+          </div>
+        </a>
+        <a class="contact-row" href="https://linkedin.com/in/agash-mahendran" target="_blank">
+          <div class="contact-row-icon">&#128188;</div>
+          <div>
+            <div class="contact-row-type">LinkedIn</div>
+            <div>linkedin.com/in/agash-mahendran</div>
+          </div>
+        </a>
+        <a class="contact-row" href="https://github.com/AgashM" target="_blank">
+          <div class="contact-row-icon">&#128025;</div>
+          <div>
+            <div class="contact-row-type">GitHub</div>
+            <div>github.com/AgashM</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUME WINDOW -->
+  <div class="window" id="win-resume">
+    <div class="win-titlebar">
+      <div class="win-dots">
+        <div class="wdot close" onclick="closeWindow('resume')"></div>
+        <div class="wdot min"></div>
+        <div class="wdot max"></div>
+      </div>
+      <div class="win-title">resume.pdf</div>
+      <div style="width:52px"></div>
+    </div>
+    <div class="win-body">
+      <div class="resume-inner">
+        <div class="resume-icon-big">&#128203;</div>
+        <div class="resume-title">Professional Resume</div>
+        <div class="resume-desc">
+          Complete professional snapshot: experience, education, certifications, and technical expertise. One page.
+          Optimized for impact.
+        </div>
+        <div class="resume-actions">
+          <a class="rbtn rbtn-primary" href="./AgashMahendran_Resume.pdf" download>&#11015; Download PDF</a>
+          <a class="rbtn rbtn-outline" href="./AgashMahendran_Resume.pdf" target="_blank">&#128065; View Online</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASKBAR -->
+  <div id="taskbar">
+    <div class="taskbar-left">
+      <div class="taskbar-logo">Agash.os</div>
+      <div class="taskbar-apps">
+        <div class="tbar-btn" id="tb-about" onclick="openWindow('about')">About</div>
+        <div class="tbar-btn" id="tb-skills" onclick="openWindow('skills')">Skills</div>
+        <div class="tbar-btn" id="tb-work" onclick="openWindow('work')">Work</div>
+        <div class="tbar-btn" id="tb-contact" onclick="openWindow('contact')">Contact</div>
+        <div class="tbar-btn" id="tb-resume" onclick="openWindow('resume')">Resume</div>
+      </div>
+    </div>
+    <div class="taskbar-right" id="taskbar-time">--:--</div>
+  </div>
+
+  <div id="keyhint">Keys: 1=About 2=Skills 3=Work 4=Contact 5=Resume Esc=Close</div>
+  <div id="toast">Welcome! Click any icon to explore &#128075;</div>
+
+  <script>
+    // STARS
+    const wp = document.getElementById('wallpaper');
+    for (let i = 0; i < 120; i++) {
+      const s = document.createElement('div'); s.className = 'star';
+      const sz = Math.random() * 2 + 0.5;
+      s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random() * 100}%;top:${Math.random() * 100}%;--d:${2 + Math.random() * 4}s;animation-delay:${Math.random() * 4}s`;
+      wp.appendChild(s);
+    }
+
+    // CLOCK
+    function updateClock() {
+      const n = new Date();
+      document.getElementById('clock-time').textContent = `${String(n.getHours()).padStart(2, '0')}:${String(n.getMinutes()).padStart(2, '0')}`;
+      document.getElementById('taskbar-time').textContent = n.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      document.getElementById('clock-date').textContent = `${days[n.getDay()]}, ${months[n.getMonth()]} ${n.getDate()}`;
+    }
+    updateClock(); setInterval(updateClock, 1000);
+
+    // WINDOW MANAGEMENT
+    let zTop = 200;
+    const openWins = new Set();
+
+    function openWindow(name) {
+      const win = document.getElementById('win-' + name);
+      if (!win) return;
+      if (win.classList.contains('open')) { focusWin(name); return; }
+      win.classList.add('open');
+      openWins.add(name);
+      focusWin(name);
+      document.getElementById('tb-' + name)?.classList.add('active');
+      document.getElementById('desktop-greeting').style.opacity = '0';
+      win.style.transform = 'scale(0.85) translateY(20px)';
+      win.style.opacity = '0';
+      requestAnimationFrame(() => {
+        win.style.transition = 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s ease';
+        win.style.transform = 'scale(1) translateY(0)';
+        win.style.opacity = '1';
+      });
+      setTimeout(() => { win.style.transition = ''; }, 400);
+      if (name === 'skills') setTimeout(animateBars, 300);
+      spawnRipple();
+    }
+
+    function closeWindow(name) {
+      const win = document.getElementById('win-' + name);
+      if (!win) return;
+      win.style.transition = 'transform 0.22s ease,opacity 0.18s ease';
+      win.style.transform = 'scale(0.88) translateY(12px)';
+      win.style.opacity = '0';
+      setTimeout(() => {
+        win.classList.remove('open', 'focused');
+        win.style.transform = ''; win.style.opacity = ''; win.style.transition = '';
+        openWins.delete(name);
+        document.getElementById('tb-' + name)?.classList.remove('active');
+        if (openWins.size === 0) document.getElementById('desktop-greeting').style.opacity = '1';
+      }, 220);
+    }
+
+    function focusWin(name) {
+      document.querySelectorAll('.window').forEach(w => w.classList.remove('focused'));
+      const win = document.getElementById('win-' + name);
+      if (win) { win.classList.add('focused'); win.style.zIndex = ++zTop; }
+    }
+
+    document.querySelectorAll('.window').forEach(win => {
+      win.addEventListener('mousedown', () => focusWin(win.id.replace('win-', '')));
+    });
+
+    // DRAG
+    document.querySelectorAll('.win-titlebar').forEach(bar => {
+      let drag = false, ox = 0, oy = 0;
+      const win = bar.closest('.window');
+      bar.addEventListener('mousedown', e => {
+        if (e.target.classList.contains('wdot')) return;
+        drag = true;
+        const r = win.getBoundingClientRect();
+        ox = e.clientX - r.left; oy = e.clientY - r.top;
+        win.style.transition = 'none'; e.preventDefault();
+      });
+      document.addEventListener('mousemove', e => {
+        if (!drag) return;
+        win.style.left = Math.max(0, Math.min(window.innerWidth - 200, e.clientX - ox)) + 'px';
+        win.style.top = Math.max(0, Math.min(window.innerHeight - 100, e.clientY - oy)) + 'px';
+        win.style.right = 'auto'; win.style.bottom = 'auto';
+      });
+      document.addEventListener('mouseup', () => { drag = false; });
+      bar.addEventListener('touchstart', e => {
+        if (e.target.classList.contains('wdot')) return;
+        drag = true; const t = e.touches[0]; const r = win.getBoundingClientRect();
+        ox = t.clientX - r.left; oy = t.clientY - r.top; win.style.transition = 'none';
+      }, { passive: true });
+      document.addEventListener('touchmove', e => {
+        if (!drag) return; const t = e.touches[0];
+        win.style.left = Math.max(0, Math.min(window.innerWidth - 200, t.clientX - ox)) + 'px';
+        win.style.top = Math.max(0, Math.min(window.innerHeight - 100, t.clientY - oy)) + 'px';
+        win.style.right = 'auto'; win.style.bottom = 'auto';
+      }, { passive: true });
+      document.addEventListener('touchend', () => { drag = false; });
+    });
+
+    // SKILL BARS
+    let barsAnimated = false;
+    function animateBars() {
+      if (barsAnimated) return; barsAnimated = true;
+      document.querySelectorAll('.skill-bar-fill').forEach((bar, i) => {
+        setTimeout(() => { bar.style.width = bar.dataset.w + '%'; }, i * 90);
+      });
+    }
+
+    // RIPPLE
+    function spawnRipple() {
+      const r = document.createElement('div');
+      r.className = 'ripple'; r.style.left = '50%'; r.style.top = '50%';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 700);
+    }
+
+    // TOAST
+    setTimeout(() => {
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }, 600);
+
+    // KEYBOARD SHORTCUTS
+    document.addEventListener('keydown', e => {
+      const map = { '1': 'about', '2': 'skills', '3': 'work', '4': 'contact', '5': 'resume' };
+      if (map[e.key]) openWindow(map[e.key]);
+      if (e.key === 'Escape') {
+        const f = document.querySelector('.window.focused');
+        if (f) closeWindow(f.id.replace('win-', ''));
+      }
+    });
+
+    // PARALLAX
+    document.addEventListener('mousemove', e => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 12;
+      const y = (e.clientY / window.innerHeight - 0.5) * 12;
+      document.querySelector('.grid-lines').style.transform = `translate(${x}px,${y}px)`;
+    });
+  </script>
+</body>
+
+</html>
