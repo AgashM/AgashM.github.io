@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agash Mahendran.os — Portfolio</title>
+  <title>Agash.os — Portfolio</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Clash+Display:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
@@ -111,6 +111,7 @@
       width: 72px;
       user-select: none;
       transition: transform 0.2s;
+      touch-action: manipulation;
     }
 
     .d-icon:hover {
@@ -131,11 +132,16 @@
       font-size: 1.6rem;
       border: 1px solid var(--glass-border);
       backdrop-filter: blur(10px);
-      transition: box-shadow 0.2s;
+      transition: box-shadow 0.2s, transform 0.2s;
     }
 
     .d-icon:hover .d-icon-box {
       box-shadow: 0 0 20px currentColor;
+      transform: translateY(-2px);
+    }
+
+    .d-icon:active .d-icon-box {
+      transform: translateY(0);
     }
 
     .d-icon-label {
@@ -927,6 +933,12 @@
 
     /* RESPONSIVE */
     @media(max-width:768px) {
+      #desktop {
+        justify-content: flex-end;
+        align-items: center;
+        padding: 1rem;
+      }
+
       .window {
         width: 92vw !important;
         height: 70vh !important;
@@ -962,7 +974,7 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 1rem;
         justify-items: center;
-        max-width: 300px;
+        max-width: 320px;
         margin: 0 auto;
       }
 
@@ -1065,44 +1077,44 @@
           <div class="skill-bar-item">
             <span class="skill-bar-name">☕ Java</span>
             <div class="skill-bar-track">
-              <div class="skill-bar-fill" style="background:var(--accent)" data-w="95"></div>
+              <div class="skill-bar-fill" style="background:var(--accent)" data-w="90"></div>
             </div>
-            <span class="skill-bar-pct">95%</span>
+            <span class="skill-bar-pct">90%</span>
           </div>
           <div class="skill-bar-item">
             <span class="skill-bar-name">🍃 Spring Boot</span>
             <div class="skill-bar-track">
-              <div class="skill-bar-fill" style="background:var(--accent)" data-w="92"></div>
+              <div class="skill-bar-fill" style="background:var(--accent)" data-w="88"></div>
             </div>
-            <span class="skill-bar-pct">92%</span>
+            <span class="skill-bar-pct">88%</span>
           </div>
           <div class="skill-bar-item">
             <span class="skill-bar-name">🏗️ Microservices</span>
             <div class="skill-bar-track">
-              <div class="skill-bar-fill" style="background:var(--accent4)" data-w="88"></div>
+              <div class="skill-bar-fill" style="background:var(--accent4)" data-w="90"></div>
             </div>
             <span class="skill-bar-pct">90%</span>
           </div>
           <div class="skill-bar-item">
             <span class="skill-bar-name">🗄️ Databases</span>
             <div class="skill-bar-track">
-              <div class="skill-bar-fill" style="background:var(--accent4)" data-w="85"></div>
+              <div class="skill-bar-fill" style="background:var(--accent4)" data-w="95"></div>
             </div>
-            <span class="skill-bar-pct">90%</span>
+            <span class="skill-bar-pct">95%</span>
           </div>
           <div class="skill-bar-item">
             <span class="skill-bar-name">📨 Messaging</span>
             <div class="skill-bar-track">
-              <div class="skill-bar-fill" style="background:var(--accent2)" data-w="80"></div>
+              <div class="skill-bar-fill" style="background:var(--accent2)" data-w="85"></div>
             </div>
             <span class="skill-bar-pct">85%</span>
           </div>
           <div class="skill-bar-item">
             <span class="skill-bar-name">☁️ AWS Cloud</span>
             <div class="skill-bar-track">
-              <div class="skill-bar-fill" style="background:var(--accent3)" data-w="82"></div>
+              <div class="skill-bar-fill" style="background:var(--accent3)" data-w="90"></div>
             </div>
-            <span class="skill-bar-pct">82%</span>
+            <span class="skill-bar-pct">90%</span>
           </div>
         </div>
         <div class="skills-section-label">// Cloud, DevOps &amp; Tooling</div>
@@ -1163,7 +1175,7 @@
         <div class="work-header">
           <div>
             <div class="work-company">Tata Elxsi</div>
-            <div class="work-role">&#8627; Software Engineer · Automotive Telematics</div>
+            <div class="work-role">&#8627; Software Engineer</div>
           </div>
           <div class="work-period">Feb 2023 – Feb 2025</div>
         </div>
@@ -1462,7 +1474,7 @@
       const map = { '1': 'about', '2': 'skills', '3': 'work', '4': 'contact', '5': 'resume' };
       if (map[e.key]) openWindow(map[e.key]);
       if (e.key === 'Escape') {
-        openWins.forEach(name => closeWindow(name));
+        [...openWins].forEach(name => closeWindow(name));
       }
     });
 
